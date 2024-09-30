@@ -27,10 +27,10 @@
     }
 
     .navbar img {
-    height: auto; /* Automatically adjust height */
-    max-height: 100px; /* Set a max height to match the navbar */
-    max-width: 100%; /* Ensure it doesn't exceed the navbar width */
-    width: auto; /* Keep width in proportion to height */
+        height: auto; /* Automatically adjust height */
+        max-height: 100px; /* Set a max height to match the navbar */
+        max-width: 100%; /* Ensure it doesn't exceed the navbar width */
+        width: auto; /* Keep width in proportion to height */
     }
 
     .navbar-toggler-icon {
@@ -52,7 +52,7 @@
 
     .dropdown-menu .dropdown-item {
             color: #00416A !important; /* Set text color to #00416A */
-        }
+    }
 
     /* Change the dropdown item hover background color */
     .dropdown-menu .dropdown-item:hover {
@@ -94,10 +94,10 @@
 
     .navbar-collapse {
     background-color: #fff;
-    /* background-color: #00416A; */
-    z-index: 10; /*Keeps it above the background */
+        /* background-color: #00416A; */
+        z-index: 10; /*Keeps it above the background */
     }
-    </style>
+</style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark">
