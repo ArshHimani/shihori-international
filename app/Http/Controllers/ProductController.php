@@ -10,6 +10,11 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    public function product_details($productTypeName){
+        return view('product-details',['productTypeName'=> $productTypeName]);
+    }
+
     public function index()
     {
         //

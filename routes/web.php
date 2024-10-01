@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductTypeController;
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,3 +34,9 @@ Route::get('/certificate', function () {
 Route::get('/products', function () {
     return view('products');
 });
+
+// Route::get('/product-details/{productTypeName}', function () {
+//     return view('product-details');
+// });
+
+Route::get('/product-details/{productTypeName}',[ProductController::class,'product_details'])->name('product.details');

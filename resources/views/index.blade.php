@@ -191,7 +191,9 @@
                         <img src="{{ asset($productType->product_type_image) }}" alt="{{ $productType->product_type_name }}">
                         <h5>{{ $productType->product_type_name }}</h5>
                         <p>{{ $productType->product_type_description }}</p>
-                        <a href="#" class="btn btn-primary">More Details</a>
+                        <!-- <a href="/product-details" class="btn btn-primary">More Details</a> -->
+                        <a href="{{ route('product.details', ['productTypeName' => $productType->product_type_name]) }}" class="btn btn-primary">More Details</a>
+
                     </div>
                 </div>
             @endforeach
