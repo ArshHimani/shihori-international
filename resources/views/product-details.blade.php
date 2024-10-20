@@ -31,28 +31,18 @@
 </style>
 
 @endpush
+    @foreach($products as $product)
+        <div class="container mt-5">
+                <div class="product-card">
+                    <img src="{{ asset($product->product_image) }}" alt="" class="product-image">
+                    <div class="product-description">
+                        <h2>{{$product->product_name}}</h2>
+                        
+                        <p>{!! nl2br(e(str_replace("\t", '&emsp;', $product->product_description))) !!}</p>
 
-<div class="container mt-5">
-    <!-- First Product: Red Chilli Powder -->
-    <div class="product-card">
-        <img src="{{ asset('images/spices/spice1.jpg') }}" alt="" class="product-image">
-        <div class="product-description">
-            <h2>Red Chilli Powder</h2>
-            <p>
-                Our premium Red Chilli Powder is made from carefully selected sun-dried red chillies, finely ground to perfection. It adds an intense, fiery flavor and vibrant color to your dishes. Perfect for spicing up curries, soups, and marinades. This is an essential ingredient for every kitchen that craves authentic heat.
-            </p>
+                    
+                    </div>
+                </div>
         </div>
-    </div>
-
-    <!-- Second Product: Turmeric -->
-    <div class="product-card">
-        <img src="{{ asset('images/spices/turmeric.jpg') }}" alt="" class="product-image">
-        <div class="product-description">
-            <h2>Turmeric Powder</h2>
-            <p>
-                Our pure Turmeric Powder is sourced from the finest turmeric roots, known for its rich color and earthy aroma. Packed with powerful antioxidants and anti-inflammatory properties, it’s not only a culinary staple but also a health booster. Perfect for enhancing curries, soups, smoothies, and even lattes.
-            </p>
-        </div>
-    </div>
-</div>
+    @endforeach
 @endsection

@@ -127,10 +127,10 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/certificate">CERTIFICATE</a>
+                    <a class="nav-link" href="/certificate-display">CERTIFICATE</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">GALLERY</a>
+                    <a class="nav-link" href="gallery-display">GALLERY</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/about">ABOUT</a>

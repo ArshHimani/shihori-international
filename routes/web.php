@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CertificateController;
+use App\Http\Controllers\GalleryController;
+use App\Models\Certificate;
+use App\Models\GalleryImage;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,23 +24,57 @@ Route::get('/', function () {
 });
 
 Route::get('/index', [ProductTypeController::class, 'index']);
+Route::get('/productType-add', [ProductTypeController::class, 'productType_add_show'])->name('productType.show');
+Route::post('/productType-add', [ProductTypeController::class, 'productType_add'])->name('productType.add');
+
+Route::post('/productType-delete', [ProductTypeController::class, 'productType_delete'])->name('productType.delete');
+
+Route::get('/productType-list', [ProductTypeController::class, 'productType_list'])->name('productType.list');
+Route::post('/productType-list/{productTypeId}', [ProductTypeController::class, 'productType_update'])->name('productType.update');
 
 Route::get('/about', function () {
     return view('about');
 });
 
+Route::get('/certificate-display',[CertificateController::class,'certificate_display'])->name('certificate.display');
 
-Route::get('/certificate', function () {
-    return view('certificate');
-});
-
-
-Route::get('/products', function () {
-    return view('products');
-});
-
-// Route::get('/product-details/{productTypeName}', function () {
-//     return view('product-details');
-// });
+Route::get('/products',[ProductController::class,'products'])->name('all.products');
 
 Route::get('/product-details/{productTypeName}',[ProductController::class,'product_details'])->name('product.details');
+
+// Route::get('/login',[])
+
+Route::get('/login', function () {
+    return view('admin.login');
+});
+
+Route::get('/new-product',[ProductController::class,'new_product'])->name('new.product');
+
+Route::post('/new-product', [ProductController::class, 'store'])->name('product.store');
+
+Route::get('/admin-index', [ProductController::class, 'show'])->name('admin.index');
+
+Route::get('/update-product/{productId}',[ProductController::class,'product_update_show'])->name('product.show');
+
+Route::put('/update-product/{productId}',[ProductController::class,'product_update'])->name('product.update');
+
+Route::get('/delete-product/{productId}',[ProductController::class,'delete_product'])->name('product.delete');
+
+Route::get('/certificate-list',[CertificateController::class,'certificate_list'])->name('certificate.list');
+
+Route::get('/certificate-add',[CertificateController::class,'certificate_add_show'])->name('certificate.show');
+Route::post('/certificate-add',[CertificateController::class,'certificate_add'])->name('certificate.add');
+
+Route::get('/certificate-delete/{certificateId}',[CertificateController::class,'certificate_delete'])->name('certificate.delete');
+
+Route::post('/certificate-update/{certificateId}',[CertificateController::class,'certificate_update'])->name('certificate.update');
+
+Route::get('/gallery',[GalleryController::class,'gallery'])->name('gallery');
+
+Route::post('/gallery-image-add',[GalleryController::class,'gallery_add'])->name('gallery.image.add');
+
+Route::post('/gallery-image-update/{imageId}',[GalleryController::class,'gallery_image_update'])->name('gallery.image.update');
+
+Route::get('/gallery-image-delete/{imageId}',[GalleryController::class,'gallery_image_delete'])->name('gallery.image.delete');
+
+Route::get('/gallery-display',[GalleryController::class,'gallery_display'])->name('gallery.display');

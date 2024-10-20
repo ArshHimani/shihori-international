@@ -88,54 +88,28 @@
 @endpush
 
 @section('content')
-    <section class="certificate-section">
-        <div class="container">
-            <div class="row">
-                <!-- Certificate 1 -->
+<section class="certificate-section">
+    <div class="container">
+        <div class="row">
+            @foreach($certificates as $index => $certificate)
                 <div class="col-md-4">
                     <div class="certificate-card">
                         <div class="image-container">
-                            <img src="{{ asset('images/home.jpg') }}" alt="Certificate 1" class="zoomable-image">
+                            <img src="{{ asset($certificate->certificate_image) }}" alt="Certificate {{ $index + 1 }}" class="zoomable-image">
                         </div>
-                        <p>Short description of certificate 1.</p>
-                        <div class="zoom-buttons">
-                            <button class="zoom-in">+</button>
-                            <button class="zoom-out">-</button>
-                        </div>
-                        <button class="btn btn-primary open-modal" data-image="{{ asset('images/home.jpg') }}">View Fullscreen</button>
+                        <p>{{ $certificate->description }}</p>
+                        <button class="btn btn-primary open-modal" data-image="{{ asset($certificate->certificate_image) }}">View Fullscreen</button>
                     </div>
                 </div>
-                <!-- Certificate 2 -->
-                <div class="col-md-4">
-                    <div class="certificate-card">
-                        <div class="image-container">
-                            <img src="{{ asset('images/home2.png') }}" alt="Certificate 2" class="zoomable-image">
-                        </div>
-                        <p>Short description of certificate 2.</p>
-                        <div class="zoom-buttons">
-                            <button class="zoom-in">+</button>
-                            <button class="zoom-out">-</button>
-                        </div>
-                        <button class="btn btn-primary open-modal" data-image="{{ asset('images/home2.png') }}">View Fullscreen</button>
-                    </div>
-                </div>
-                <!-- Certificate 3 -->
-                <div class="col-md-4">
-                    <div class="certificate-card">
-                        <div class="image-container">
-                            <img src="{{ asset('images/home3.jpeg') }}" alt="Certificate 3" class="zoomable-image">
-                        </div>
-                        <p>Short description of certificate 3.</p>
-                        <div class="zoom-buttons">
-                            <button class="zoom-in">+</button>
-                            <button class="zoom-out">-</button>
-                        </div>
-                        <button class="btn btn-primary open-modal" data-image="{{ asset('images/home3.jpeg') }}">View Fullscreen</button>
-                    </div>
-                </div>
-            </div>
+
+                @if(($index + 1) % 3 == 0) <!-- Check if it's the third item -->
+                    </div><div class="row"> <!-- Close current row and open a new one -->
+                @endif
+            @endforeach
         </div>
-    </section>
+    </div>
+</section>
+     
 
     <!-- Fullscreen Image Modal -->
     <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
