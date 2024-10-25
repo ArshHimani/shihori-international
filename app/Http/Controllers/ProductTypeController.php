@@ -94,5 +94,14 @@ class ProductTypeController extends Controller
                 return response()->json(['success' => true, 'message' => 'Product updated successfully!']);
         }
     }
+
+    public function productType_delete($id){
+        $productType = ProductType::find($id);
+
+        if($productType){
+            $productType->delete();
+            return redirect()->route('productType.list');
+        }
+    }
 }
 

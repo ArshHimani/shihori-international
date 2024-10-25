@@ -32,6 +32,11 @@
             border-radius: 5px;
             box-sizing: border-box;
         }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: -10px;
+        }
         input[type="submit"] {
             width: 100%;
             padding: 10px;
@@ -53,83 +58,82 @@
     </style>
 @endpush
 
-
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Catch the form submission
-        // document.getElementById('product-form').addEventListener('submit', function(e) {
-        //     e.preventDefault(); // Prevent the form from submitting immediately
-
-        //     // Perform the actual form submission via AJAX or handle the form submit logic
-        //     // Assuming the form submission was successful, you can show the SweetAlert
-
-        //     // Example success scenario
-        //     Swal.fire({
-        //         title: 'Success!',
-        //         text: 'Product added successfully!',
-        //         icon: 'success',
-        //         confirmButtonText: 'OK'
-        //     }).then((result) => {
-        //         if (result.isConfirmed) {
-        //             // Delay redirection to allow users to see the SweetAlert message
-        //             setTimeout(function() {
-        //                 window.location.href = '{{ route('new.product') }}'; // Redirect to the desired route
-        //             });
-        //         }
-        //     });
-        // });
-
         document.getElementById('product-form').addEventListener('submit', function(e) {
-        e.preventDefault(); // Prevent the default form submission
+            e.preventDefault(); // Prevent default submission
 
-    let formData = new FormData(this); // Create form data object from form
+            // Clear previous errors
+            document.querySelectorAll('.error').forEach(el => el.innerHTML = '');
 
-    // Perform the actual form submission via AJAX
-    fetch('{{ route('product.store') }}', {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token in the request
-        },
-        body: formData
-    })
-    .then(response => response.json()) // Assuming the server responds with JSON
-    .then(data => {
-        if (data.success) {
-            // Show success message if the certificate was added successfully
-            Swal.fire({
-                title: 'Success!',
-                text: 'Product added successfully!',
-                icon: 'success',
-                confirmButtonText: 'OK'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Redirect to the desired route after showing the success message
-                    window.location.href = '{{ route('new.product') }}';
+            let hasError = false;
+
+            // Validation rules
+            const fields = [
+                { id: 'product-name', message: 'Product Name is required' },
+                { id: 'product-title', message: 'Title is required' },
+                { id: 'product-description', message: 'Description is required' },
+                { id: 'product-category', message: 'Category is required' },
+                { id: 'product-image', message: 'Image is required' }
+            ];
+
+            // Check each field
+            fields.forEach(field => {
+                let input = document.getElementById(field.id);
+                if (input.value.trim() === '') {
+                    hasError = true;
+                    const errorElement = document.createElement('div');
+                    errorElement.classList.add('error');
+                    errorElement.innerHTML = field.message;
+                    input.parentNode.insertBefore(errorElement, input.nextSibling);
                 }
             });
-        } else {
-            // Show error message if something went wrong
-            Swal.fire({
-                title: 'Error!',
-                text: data.message || 'An error occurred while adding the Product.',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-        }
-    })
-    .catch(error => {
-        // Handle any errors that occur during the fetch
-        console.error('Error:', error);
-        Swal.fire({
-            title: 'Error!',
-            text: 'Product already exists.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-        });
-    });
-});
 
+            // If no errors, proceed with form submission
+            if (!hasError) {
+                let formData = new FormData(this); // Create form data object from form
+
+                fetch('{{ route('product.store') }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'Product added successfully!',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '{{ route('new.product') }}';
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: data.message || 'An error occurred while adding the product.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Product already exists.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                });
+            }
+        });
     </script>
 @endpush
 
@@ -145,7 +149,7 @@
         </div>
     @endif
 
-    <div class="center-wrapper"> <!-- Flex wrapper to center the form -->
+    <div class="center-wrapper">
         <div class="product-form-container">
             <h2>Add New Product</h2>
             <form action="{{route('product.store')}}" id="product-form" method="POST" enctype="multipart/form-data">
@@ -153,7 +157,7 @@
                 <label for="product-name">Product Name:</label>
                 <input type="text" id="product-name" name="product_name" placeholder="Enter product name" required>
 
-                <label for="product-title">Title</label>
+                <label for="product-title">Title:</label>
                 <input type="text" id="product-title" name="product_title" placeholder="Enter Title" required>
 
                 <label for="product-description">Description:</label>
@@ -175,5 +179,3 @@
         </div>
     </div>
 @endsection
-
-

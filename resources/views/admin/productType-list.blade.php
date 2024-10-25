@@ -68,22 +68,22 @@
             });
         }
 
-        function confirmUpdate(productTypeId) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, Update it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Submit the delete form
-                    document.getElementById('update-form-' + productTypeId).submit();
-                }
-            });
-        }
+        // function confirmUpdate(productTypeId) {
+        //     Swal.fire({
+        //         title: 'Are you sure?',
+        //         text: "You won't be able to revert this!",
+        //         icon: 'warning',
+        //         showCancelButton: true,
+        //         confirmButtonColor: '#3085d6',
+        //         cancelButtonColor: '#d33',
+        //         confirmButtonText: 'Yes, Update it!'
+        //     }).then((result) => {
+        //         if (result.isConfirmed) {
+        //             // Submit the delete form
+        //             document.getElementById('update-form-' + productTypeId).submit();
+        //         }
+        //     });
+        // }
 
         document.querySelectorAll('.open-modal').forEach(button => {
             button.addEventListener('click', function() {
@@ -146,10 +146,73 @@
         });
     });
 });
-    </script>
+
+
+//validation
+
+function validateForm(productTypeId) {
+        // Get the form fields
+        let nameField = document.getElementById('productType_name_' + productTypeId);
+        let descriptionField = document.getElementById('productType_description_' + productTypeId);
+        let imageField = document.getElementById('productType_image_' + productTypeId);
+
+        // Error elements
+        let nameError = document.getElementById('error-productType_name-' + productTypeId);
+        let descriptionError = document.getElementById('error-productType_description-' + productTypeId);
+        let imageError = document.getElementById('error-productType_image-' + productTypeId);
+
+        let valid = true;
+
+        // Reset error messages
+        nameError.innerHTML = '';
+        descriptionError.innerHTML = '';
+        imageError.innerHTML = '';
+
+        // Validate the name field
+        if (nameField.value.trim() === '') {
+            nameError.innerHTML = 'Category name is required.';
+            valid = false;
+        }
+
+        // Validate the description field
+        if (descriptionField.value.trim() === '') {
+            descriptionError.innerHTML = 'Category description is required.';
+            valid = false;
+        }
+
+        // Validate the image field (optional)
+        if (imageField.files.length > 0) {
+            let file = imageField.files[0];
+            let allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+            let fileExtension = file.name.split('.').pop().toLowerCase();
+            if (!allowedExtensions.includes(fileExtension)) {
+                imageError.innerHTML = 'Please upload a valid image (jpg, jpeg, png, gif).';
+                valid = false;
+            } else if (file.size > 2 * 1024 * 1024) { // Max file size: 2MB
+                imageError.innerHTML = 'Image size should not exceed 2MB.';
+                valid = false;
+            }
+        }
+
+        // Prevent form submission if validation fails
+        return valid;
+    }
+</script>
 @endpush
 
 @section('content')
+@if($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+@endif
+@if ($errors->has('productType_name'))
+    <div class="text-danger">{{ $errors->first('productType_name') }}</div>
+@endif
             <a href="{{route('productType.show')}}" class="btn btn-primary">New Category</a>
 
             <h2 class="text-center">All Categories</h2>
@@ -165,40 +228,45 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($productTypes as $productType)
-                <tr>
-                <form id="update-form-{{ $productType->id }}" action="{{ route('productType.update', $productType->id) }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                    <td><img src="{{ asset($productType->product_type_image) }}" class="open-modal" data-image="{{ asset($productType->product_type_image) }}" alt="Image"> {{$productType->id}}</td>
-                    <td class="product-name">
-                        <input type="text" value="{{ $productType->product_type_name }}" name="productType_name" id="">
-                    </td>
-                    <td class="product-name">
-                        <input type="text" value="{{ $productType->product_type_description }}" name="productType_description" id="">
-                    </td>
-                    <td>
-                        <!-- Update Icon -->
-                        <input type="file" name="productType_image" id="">
-                    </td>
-                    <td>
-                       <span onclick="confirmUpdate({{ $productType->id }}">
-                        <button type="submit" class="btn btn-primary">Update</button>
-                       </span>
-                    </td>
-                    </form>
-                    <td>
-                        <!-- Delete Icon -->
-                        <span onclick="confirmDelete({{ $productType->id }})">
-                            <i class="fa fa-trash"></i>
-                        </span>
-                        <form id="delete-form-{{ $productType->id }}" action="{{ route('productType.delete', $productType->id) }}" method="GET" style="display:none;">
-                            @csrf
-                            @method('DELETE')
-                        </form>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
+    @foreach($productTypes as $productType)
+        <tr>
+        <form id="update-form-{{ $productType->id }}" action="{{ route('productType.update', $productType->id) }}" method="POST" enctype="multipart/form-data" onsubmit="return validateForm({{ $productType->id }})">
+            @csrf
+            <td>
+                <img src="{{ asset($productType->product_type_image) }}" class="open-modal" data-image="{{ asset($productType->product_type_image) }}" alt="Image">
+                {{$productType->id}}
+            </td>
+            <td class="product-name">
+                <input type="text" value="{{ old('productType_name', $productType->product_type_name) }}" name="productType_name" id="productType_name_{{ $productType->id }}">
+                <div id="error-productType_name-{{ $productType->id }}" class="text-danger"></div>
+            </td>
+            <td class="product-name">
+                <input type="text" value="{{ old('productType_description', $productType->product_type_description) }}" name="productType_description" id="productType_description_{{ $productType->id }}">
+                <div id="error-productType_description-{{ $productType->id }}" class="text-danger"></div>
+            </td>
+            <td>
+                <input type="file" name="productType_image" id="productType_image_{{ $productType->id }}">
+                <div id="error-productType_image-{{ $productType->id }}" class="text-danger"></div>
+            </td>
+            <td>
+                <span onclick="confirmUpdate({{ $productType->id }})">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </span>
+            </td>
+        </form>
+        <td>
+            <span onclick="confirmDelete({{ $productType->id }})">
+                <i class="fa fa-trash"></i>
+            </span>
+            <form id="delete-form-{{ $productType->id }}" action="{{ route('productType.delete', $productType->id) }}" method="GET" style="display:none;">
+                @csrf
+                @method('DELETE')
+            </form>
+        </td>
+    </tr>
+@endforeach
+</tbody>
+
     </table>
 
      <!-- Modal structure for full-screen image display -->

@@ -173,47 +173,39 @@ footer p {
 @endpush
 
 @section('content')
-     <!-- Hero Section -->
-     <section class="hero">
-        <div class="container">
-            <h1>About Us</h1>
-            <p>Your Global Cargo and Shipping Partner</p>
-        </div>
-    </section>
+     
 
     <!-- About Us Content -->
     <section class="about-section">
         <div class="container">
+            @foreach($aboutUs as $aboutUs)
             <div class="about-text">
                 <h2>Who We Are</h2>
-                <p>Founded in 1995, Ocean Freight Logistics has been at the forefront of global shipping. We offer seamless, cost-effective solutions that cater to the unique needs of businesses worldwide.</p>
-                <p>From small enterprises to multinational corporations, our mission is to deliver goods safely and efficiently across borders, connecting businesses to the world.</p>
+                <p>{!! nl2br(e(str_replace("\t", '&emsp;', $aboutUs->para1))) !!}</p>
             </div>
-
+            
             <div class="about-text">
                 <h2>Our Vision & Mission</h2>
-                <p>We aim to be the world’s most trusted logistics partner, creating a future where shipping is smooth and accessible. We are committed to sustainability, efficiency, and continuous innovation.</p>
+                <p>{!! nl2br(e(str_replace("\t", '&emsp;', $aboutUs->para2))) !!}</p>
             </div>
 
             <div class="about-features">
                 <div class="feature-box">
-                    <img src="images/global-network.png" alt="Global Network">
-                    <h3>Global Network</h3>
-                    <p>With a network that spans over 120 countries, we ensure fast, reliable deliveries anywhere in the world.</p>
+                    <h3>{{$aboutUs->feature1_title}}</h3>
+                    <p>{!! nl2br(e(str_replace("\t", '&emsp;', $aboutUs->feature1))) !!}</p>
                 </div>
 
                 <div class="feature-box">
-                    <img src="images/customer-care.png" alt="Customer Care">
-                    <h3>24/7 Customer Support</h3>
-                    <p>Our dedicated team is always available to assist you with your shipment queries.</p>
+                    <h3>{{$aboutUs->feature2_title}}</h3>
+                    <p>{!! nl2br(e(str_replace("\t", '&emsp;', $aboutUs->feature2))) !!}</p>
                 </div>
 
                 <div class="feature-box">
-                    <img src="images/sustainability.png" alt="Sustainability">
-                    <h3>Sustainability</h3>
-                    <p>We strive for environmentally responsible logistics practices, ensuring a better planet for future generations.</p>
+                    <h3>{{$aboutUs->feature3_title}}</h3>
+                    <p>{!! nl2br(e(str_replace("\t", '&emsp;', $aboutUs->feature3))) !!}</p>
                 </div>
             </div>
+        @endforeach
         </div>
     </section>
 
@@ -223,20 +215,20 @@ footer p {
             <h2>Meet Our Leadership Team</h2>
             <div class="team-grid">
                 <div class="team-member">
-                    <img src="images/team1.jpg" alt="John Doe">
-                    <h3>John Doe</h3>
+                    <!-- <img src="images/team1.jpg" alt="John Doe"> -->
+                    <h3>Nitin Bhatvashiya</h3>
                     <p>CEO & Founder</p>
                 </div>
                 <div class="team-member">
-                    <img src="images/team2.jpg" alt="Jane Smith">
-                    <h3>Jane Smith</h3>
+                    <!-- <img src="images/team2.jpg" alt="Jane Smith"> -->
+                    <h3>Yash Parmar</h3>
                     <p>Head of Operations</p>
                 </div>
-                <div class="team-member">
+                <!-- <div class="team-member">
                     <img src="images/team3.jpg" alt="Mark Johnson">
                     <h3>Mark Johnson</h3>
                     <p>Chief Logistics Officer</p>
-                </div>
+                </div> -->
             </div>
         </div>
     </section>

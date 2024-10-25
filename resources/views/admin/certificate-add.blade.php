@@ -107,6 +107,49 @@
     });
 });
 
+function validateForm() {
+    // Get the form fields
+    let nameField = document.getElementById('certificate_name');
+    let imageField = document.getElementById('certificate_image');
+
+    // Error elements
+    let nameError = document.getElementById('error-certificate_name');
+    let imageError = document.getElementById('error-certificate_image');
+
+    let valid = true;
+
+    // Reset error messages
+    nameError.innerHTML = '';
+    imageError.innerHTML = '';
+
+    // Validate the certificate name field
+    if (nameField.value.trim() === '') {
+        nameError.innerHTML = 'Certificate name is required.';
+        valid = false;
+    }
+
+    // Validate the certificate image field
+    if (imageField.files.length === 0) {
+        imageError.innerHTML = 'Please upload an image.';
+        valid = false;
+    } else {
+        let file = imageField.files[0];
+        let allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+        let fileExtension = file.name.split('.').pop().toLowerCase();
+        if (!allowedExtensions.includes(fileExtension)) {
+            imageError.innerHTML = 'Please upload a valid image (jpg, jpeg, png, gif).';
+            valid = false;
+        } else if (file.size > 2 * 1024 * 1024) { // Max file size: 2MB
+            imageError.innerHTML = 'Image size should not exceed 2MB.';
+            valid = false;
+        }
+    }
+
+    // Prevent form submission if validation fails
+    return valid;
+}
+
+
     </script>
 @endpush
 
@@ -125,16 +168,18 @@
     <div class="center-wrapper"> <!-- Flex wrapper to center the form -->
         <div class="product-form-container">
             <h2>Add Certificate</h2>
-            <form action="{{route('certificate.add')}}" id="product-form" method="POST" enctype="multipart/form-data">
-                @csrf
-                <label for="product-name">Certificate Name:</label>
-                <input type="text" id="product-name" name="certificate_name" placeholder="Enter product name" required>
+            <form action="{{route('certificate.add')}}" id="product-form" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+    @csrf
+    <label for="product-name">Certificate Name:</label>
+    <input type="text" id="certificate_name" name="certificate_name" placeholder="Enter certificate name" required>
+    <div id="error-certificate_name" class="text-danger"></div>
 
-                <label for="product-image">Upload Image:</label>
-                <input type="file" id="product-image" name="certificate_image" accept="image/*" required>
+    <label for="product-image">Upload Image:</label>
+    <input type="file" id="certificate_image" name="certificate_image" accept="image/*" required>
+    <div id="error-certificate_image" class="text-danger"></div>
 
-                <input type="submit" value="Add Certificate">
-            </form>
+    <input type="submit" value="Add Certificate">
+</form>
         </div>
     </div>
 @endsection

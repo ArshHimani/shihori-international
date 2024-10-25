@@ -24,7 +24,7 @@
             margin-bottom: 20px;
             text-align: center;
         }
-        input[type="text"], input[type="number"], textarea, select, input[type="file"] {
+        input[type="text"], input[type="file"] {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -50,63 +50,95 @@
             display: block;
             font-weight: bold;
         }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
     </style>
 @endpush
-
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-    document.getElementById('product-form').addEventListener('submit', function(e) {
-    e.preventDefault(); // Prevent the default form submission
+        document.getElementById('product-form').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent default form submission
 
-    let formData = new FormData(this); // Create form data object from form
+            // Clear previous error messages
+            document.querySelectorAll('.error').forEach(el => el.textContent = '');
 
-    // Perform the actual form submission via AJAX
-    fetch('{{ route('productType.add') }}', {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token in the request
-        },
-        body: formData
-    })
-    .then(response => response.json()) // Assuming the server responds with JSON
-    .then(data => {
-        if (data.success) {
-            // Show success message if the certificate was added successfully
-            Swal.fire({
-                title: 'Success!',
-                text: 'Category added successfully!',
-                icon: 'success',
-                confirmButtonText: 'OK'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Redirect to the desired route after showing the success message
-                    window.location.href = '{{ route('productType.show') }}';
-                }
-            });
-        } else {
-            // Show error message if something went wrong
-            Swal.fire({
-                title: 'Error!',
-                text: data.message || 'An error occurred while adding the certificate.',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-        }
-    })
-    .catch(error => {
-        // Handle any errors that occur during the fetch
-        console.error('Error:', error);
-        Swal.fire({
-            title: 'Error!',
-            text: 'An unexpected error occurred. Please try again later.',
-            icon: 'error',
-            confirmButtonText: 'OK'
+            let isValid = true;
+
+            // Validate Category Name
+            let categoryName = document.getElementById('product-name');
+            if (categoryName.value.trim() === '') {
+                isValid = false;
+                categoryName.nextElementSibling.textContent = 'Category name is required';
+            }
+
+            // Validate Category Description
+            let categoryDescription = document.querySelector('input[name="category_description"]');
+            if (categoryDescription.value.trim() === '') {
+                isValid = false;
+                categoryDescription.nextElementSibling.textContent = 'Category description is required';
+            }
+
+            // Validate Category Image
+            let categoryImage = document.getElementById('product-image');
+            if (!categoryImage.files.length) {
+                isValid = false;
+                categoryImage.nextElementSibling.textContent = 'Please upload a category image';
+            }
+
+            // If all fields are valid, submit the form via AJAX
+            if (isValid) {
+                let formData = new FormData(this); // Create form data object from the form
+
+                fetch('{{ route('productType.add') }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token in the request
+                    },
+                    body: formData
+                })
+                .then(response => response.json()) // Assuming the server responds with JSON
+                .then(data => {
+                    if (data.success) {
+                        // Show success message if the category was added successfully
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'Category added successfully!',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Redirect to the desired route after showing the success message
+                                window.location.href = '{{ route('productType.show') }}';
+                            }
+                        });
+                    } else {
+                        // Show error message if something went wrong
+                        Swal.fire({
+                            title: 'Error!',
+                            text: data.message || 'An error occurred while adding the category.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'An unexpected error occurred. Please try again later.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                });
+            }
         });
-    });
-});
-
     </script>
 @endpush
 
@@ -129,17 +161,18 @@
                 @csrf
                 <label for="product-name">New Category:</label>
                 <input type="text" id="product-name" name="category_name" placeholder="Fertilizer" required>
+                <span class="error"></span>
 
-                <label for="product-name">Description:</label>
-                <input type="text" id="product-name" name="category_description" placeholder="Description of Category" required>
+                <label for="category-description">Description:</label>
+                <input type="text" id="category-description" name="category_description" placeholder="Description of Category" required>
+                <span class="error"></span>
 
                 <label for="product-image">Upload Image:</label>
                 <input type="file" id="product-image" name="category_image" accept="image/*" required>
+                <span class="error"></span>
 
                 <input type="submit" value="Add Category">
             </form>
         </div>
     </div>
 @endsection
-
-

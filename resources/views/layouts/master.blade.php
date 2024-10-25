@@ -12,6 +12,8 @@
     <!-- Optional Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" rel="stylesheet">
 
+    <!-- font Awesome -->
+    <link rel="stylesheet" href="{{ asset('fontawesome-free-6.6.0-web/css/all.css') }}">
 @stack('styles')
 
 <style>
@@ -102,7 +104,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
-        <img src="images/logo5.png" alt="">
+        <img src="images/logo/logo1.png" alt="">
         <a class="navbar-brand" href="#" style="font-size:30px;">SHIHORI INTERNATIONAL</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -119,9 +121,9 @@
                         PRODUCTS
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="productsDropdown">
-                        <li><a class="dropdown-item" href="/products/product1">Fertilizer</a></li>
-                        <li><a class="dropdown-item" href="/products/product2">Red Chilli Powder</a></li>
-                        <li><a class="dropdown-item" href="/products/product3">Coconut</a></li>
+                        @foreach($productTypes as $productType)
+                            <li><a class="dropdown-item" href="{{ route('product.details', $productType->product_type_name)}}">{{$productType->product_type_name}}</a></li>
+                        @endforeach
                         <li><a class="dropdown-item" href="/products">All Products</a></li>
                     </ul>
                 </li>
@@ -136,7 +138,7 @@
                     <a class="nav-link" href="/about">ABOUT</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">CONTACT</a>
+                    <a class="nav-link" href="/contactUs-display">CONTACT US</a>
                 </li>
             </ul>
         </div>

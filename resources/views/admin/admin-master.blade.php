@@ -104,6 +104,7 @@
         /* background-color: #00416A; */
         z-index: 10; /*Keeps it above the background */
     }
+
 </style>
 </head>
 <body>
@@ -126,12 +127,16 @@
                     <a class="nav-link" href="{{route('gallery')}}">GALLERY</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">ABOUT</a>
+                    <a class="nav-link" href="{{route('aboutUs')}}">ABOUT</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{route('certificate.list')}}">CERTIFICATE</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('contactUs')}}">CONTACT US</a>
+                </li>
             </ul>
+            <h3><a href="/logout"><i class="fas fa-sign-out" style="color:white;"></i></a></h3>
         </div>
     </div>
 </nav>

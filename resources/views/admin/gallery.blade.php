@@ -51,6 +51,40 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    function validateForm() {
+    // Get the image field
+    let imageField = document.getElementById('gallery_image');
+
+    // Error element
+    let imageError = document.getElementById('error-gallery_image');
+
+    let valid = true;
+
+    // Reset error message
+    imageError.innerHTML = '';
+
+    // Validate the image field
+    if (imageField.files.length === 0) {
+        imageError.innerHTML = 'Please select an image.';
+        valid = false;
+    } else {
+        let file = imageField.files[0];
+        let allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+        let fileExtension = file.name.split('.').pop().toLowerCase();
+        if (!allowedExtensions.includes(fileExtension)) {
+            imageError.innerHTML = 'Please upload a valid image (jpg, jpeg, png, gif).';
+            valid = false;
+        } else if (file.size > 2 * 1024 * 1024) { // Max file size: 2MB
+            imageError.innerHTML = 'Image size should not exceed 2MB.';
+            valid = false;
+        }
+    }
+
+    // Prevent form submission if validation fails
+    return valid;
+}
+
+
         function confirmDelete(productTypeId) {
             Swal.fire({
                 title: 'Are you sure?',
@@ -203,9 +237,21 @@
 @endpush
 
 @section('content')
-    <form id="product-form" action="{{route('gallery.image.add')}}" method="POST"  enctype="multipart/form-data">
+
+@if($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+@endif
+
+    <form id="product-form" action="{{route('gallery.image.add')}}" method="POST"  enctype="multipart/form-data" onsubmit="return validateForm()">
         @csrf
-        <input type="file" name="gallery_image" id=""> <input type="submit" class="btn btn-primary" value="Add Image">
+        <input type="file" name="gallery_image" id="gallery_image"> <input type="submit" class="btn btn-primary" value="Add Image">
+        <div id="error-gallery_image" class="text-danger"></div>
     </form>
 
     <h2 class="text-center">All Categories</h2>

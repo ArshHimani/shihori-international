@@ -24,7 +24,7 @@
             margin-bottom: 20px;
             text-align: center;
         }
-        input[type="text"], input[type="number"], textarea, select, input[type="file"] {
+        input[type="text"], textarea, select {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -57,62 +57,102 @@
             display: block;
             margin: 10px 0;
         }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
     </style>
 @endpush
-
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-    document.getElementById('product-form').addEventListener('submit', function(e) {
-        e.preventDefault(); // Prevent the default form submission
+        document.getElementById('product-form').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent the default form submission
 
-        let formData = new FormData(this); // Create form data object from form
+            // Clear previous error messages
+            document.querySelectorAll('.error').forEach(el => el.textContent = '');
 
-        // Perform the actual form submission via AJAX
-        fetch('{{ route('product.update', $product->id) }}', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token in the request
-            },
-            body: formData
-        })
-        .then(response => response.json()) // Assuming the server responds with JSON
-        .then(data => {
-            if (data.success) {
-                // Show success message if the product was updated successfully
-                Swal.fire({
-                    title: 'Success!',
-                    text: 'Product updated successfully!',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Redirect to the desired route after showing the success message
-                        window.location.href = '{{ route('product.show', $product->id) }}';
+            let isValid = true; 
+
+            // Validate Product Name
+            let productName = document.getElementById('product-name');
+            if (productName.value.trim() === '') {
+                isValid = false;
+                productName.nextElementSibling.textContent = 'Product name is required';
+            }
+
+            // Validate Product Title
+            let productTitle = document.getElementById('product-title');
+            if (productTitle.value.trim() === '') {
+                isValid = false;
+                productTitle.nextElementSibling.textContent = 'Product title is required';
+            }
+
+            // Validate Product Description
+            let productDescription = document.getElementById('product-description');
+            if (productDescription.value.trim() === '') {
+                isValid = false;
+                productDescription.nextElementSibling.textContent = 'Product description is required';
+            }
+
+            // Validate Product Category
+            let productCategory = document.getElementById('product-category');
+            if (productCategory.value === '') {
+                isValid = false;
+                productCategory.nextElementSibling.textContent = 'Please select a category';
+            }
+
+            // If all fields are valid, submit the form via AJAX
+            if (isValid) {
+                let formData = new FormData(this);
+
+                fetch('{{ route('product.update', $product->id) }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token in the request
+                    },
+                    body: formData
+                })
+                .then(response => response.json()) // Assuming the server responds with JSON
+                .then(data => {
+                    if (data.success) {
+                        // Show success message if the product was updated successfully
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'Product updated successfully!',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Redirect to the desired route after showing the success message
+                                window.location.href = '{{ route('product.show', $product->id) }}';
+                            }
+                        });
+                    } else {
+                        // Show error message if something went wrong
+                        Swal.fire({
+                            title: 'Error!',
+                            text: data.message || 'An error occurred while updating the product.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
                     }
-                });
-            } else {
-                // Show error message if something went wrong
-                Swal.fire({
-                    title: 'Error!',
-                    text: data.message || 'An error occurred while updating the product.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'An unexpected error occurred. Please try again later.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
                 });
             }
-        })
-        .catch(error => {
-            // Handle any errors that occur during the fetch
-            console.error('Error:', error);
-            Swal.fire({
-                title: 'Error!',
-                text: 'An unexpected error occurred. Please try again later.',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
         });
-    });
     </script>
 
     <!-- To handle tabs and line breaks in textarea -->
@@ -133,6 +173,17 @@
 @endpush
 
 @section('content')
+
+@if($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+@endif
+
     <div class="center-wrapper">
         <div class="product-form-container">
             <h2>Update Product</h2>
@@ -142,12 +193,15 @@
 
                 <label for="product-name">Product Name:</label>
                 <input type="text" value="{{ $product->product_name }}" id="product-name" name="product_name" placeholder="Enter product name" required>
+                <span class="error"></span>
 
                 <label for="product-title">Title</label>
                 <input type="text" value="{{ $product->product_title }}" id="product-title" name="product_title" placeholder="Enter title" required>
+                <span class="error"></span>
 
                 <label for="product-description">Description:</label>
                 <textarea id="product-description" name="product_description" rows="4" placeholder="Enter product description" required>{{  $product->product_description }}</textarea>
+                <span class="error"></span>
 
                 <label for="product-category">Category:</label>
                 <select id="product-category" name="product_type" required>
@@ -158,6 +212,7 @@
                         </option>
                     @endforeach
                 </select>
+                <span class="error"></span>
 
                 <label for="product-image">Upload Image:</label>
                 <img src="{{ asset($product->product_image) }}" alt="Product Image">

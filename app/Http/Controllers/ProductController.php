@@ -14,7 +14,6 @@ class ProductController extends Controller
 
     public function product_details($productTypeName){
         $products = Product::where('product_type',$productTypeName)->get();
-        // return view('product-details',['product_type'=> $products]);
         return view('product-details',['products'=> $products]);
     }
 
