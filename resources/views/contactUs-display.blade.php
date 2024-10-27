@@ -16,7 +16,7 @@ body{
     line-height: 1.5;
 }
 .contact-bg{
-    height: 40vh;
+    /* height: 40vh; */
     background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url(image/contect-01.jpg);
     background-position: 50% 100%;
     background-repeat: no-repeat;
@@ -217,9 +217,8 @@ body{
           <div></div>
           <div></div>
         </div>
-        <p class = "text">{{$contactUs->paragraph}}</p>
+        <p class = "text">{!! nl2br(e(str_replace("\t", '&emsp;', $contactUs->paragraph))) !!}</p>
       </div>
-
 
       <div class = "contact-body">
         <div class = "contact-info">
@@ -259,7 +258,8 @@ body{
       @endforeach
         
       <div class = "map">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d29558.32072931054!2d71.63894456059894!3d22.172060905825585!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3958dc7e3fea26e9%3A0x9bdee1c5dbe2e484!2sBotad%2C%20Gujarat%20364710!5e0!3m2!1sen!2sin!4v1727671752756!5m2!1sen!2sin" width="100%" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+        <!-- <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5800757.977775673!2d70.4670221!3d22.8829024!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3958dbac2c37d799%3A0xee177085549223ae!2sShihori%20international!5e0!3m2!1sen!2sin!4v1729960050773!5m2!1sen!2sin" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe> -->
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5950443.240490101!2d71.6733135!3d22.03331!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3958dbac2c37d799%3A0xee177085549223ae!2sShihori%20international!5e0!3m2!1sen!2sin!4v1729960050773!5m2!1sen!2sin" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
       </div>
     </section>
 @endsection

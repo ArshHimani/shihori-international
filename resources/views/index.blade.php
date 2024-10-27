@@ -2,7 +2,7 @@
 
 @push('styles')
 <style>
-    /* Styles for background and content */
+    /* General Styles */
     .background-image {
         background-size: cover;
         background-position: center;
@@ -18,7 +18,6 @@
         font-family: 'Times New Roman', Times, serif;
     }
 
-    /* Text content that appears on the images */
     .background-content {
         position: absolute;
         top: 50%;
@@ -38,7 +37,6 @@
         font-size: 2.2rem;
     }
 
-    /* Arrow button styles */
     .arrow {
         position: absolute;
         top: 50%;
@@ -59,22 +57,11 @@
         align-items: center;
     }
 
-    .arrow-left {
-        left: 20px;
-    }
+    .arrow-left { left: 20px; }
+    .arrow-right { right: 20px; }
+    .arrow:hover { background-color: rgba(0, 0, 0, 0.8); }
 
-    .arrow-right {
-        right: 20px;
-    }
-
-    .arrow:hover {
-        background-color: rgba(0, 0, 0, 0.8);
-    }
-
-    .product-section {
-        padding: 50px 0;
-        clear: both; /* Ensure it starts after the image section */
-    }
+    .product-section { padding: 50px 0; clear: both; }
 
     .product-card {
         border: 1px solid #ddd;
@@ -87,7 +74,6 @@
         background-color: white;
     }
 
-    /* Hover effect for the product card */
     .product-card:hover {
         transform: scale(1.05);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -95,139 +81,107 @@
 
     .product-card img {
         width: 100%;
-        height: 180px;
-        max-width: 250px; /* Limit the size of the product image */
-        border-radius: 50%; /* Make the image circular */
-        /* border: 5px solid #00416A; Inner border color (Dark Blue) */
-        /* padding: 5px;
-        background-color: white; Add a small background for separation */
-        box-shadow: 0 0 0 5px white, 0 0 0 8px #00416A; /* Outer borders with Orange and Dark Blue */
+        height: auto; /* Set height to auto for better responsiveness */
+        max-width: 250px;
+        border-radius: 50%;
+        box-shadow: 0 0 0 5px white, 0 0 0 8px #00416A;
         margin-bottom: 15px;
     }
 
-    .product-card h5 {
-        margin: 15px 0;
-        font-size: 1.2rem;
-        font-weight: bold;
-    }
+    .product-card h5 { font-size: 1.2rem; font-weight: bold; margin: 15px 0; }
+    .product-card p { font-size: 1rem; color: #666; }
 
-    .product-card p {
-        font-size: 1rem;
-        color: #666;
-    }
-
-    /* Custom button color for .btn-primary */
     .btn-primary {
-        background-color: #00416A !important; /* Set background color */
-        border-color: #00416A !important; /* Set border color */
+        background-color: #00416A !important;
+        border-color: #00416A !important;
     }
 
     .btn-primary:hover {
-        background-color: #003459 !important; /* Darken the background on hover */
-        border-color: #003459 !important; /* Darken the border on hover */
+        background-color: #003459 !important;
+        border-color: #003459 !important;
+    }
+
+    /* Responsive Media Queries */
+    @media (max-width: 992px) {
+        .background-content h1 { font-size: 2.5rem; }
+        .background-content p { font-size: 1.8rem; }
+        .product-card img { max-width: 200px; }
+    }
+
+    @media (max-width: 768px) {
+        .background-image { height: 400px; }
+        .background-content h1 { font-size: 2rem; }
+        .background-content p { font-size: 1.5rem; }
+
+        .arrow {
+            width: 40px;
+            height: 40px;
+            font-size: 1.5rem;
+        }
+
+        .product-card {
+            margin: 10px;
+            padding: 15px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .background-content h1 { font-size: 1.8rem; }
+        .background-content p { font-size: 1.2rem; }
+        .product-card img { max-width: 150px; }
+
+        /* Stack product cards vertically on small screens */
+        .product-section .col-md-4 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        .product-card {
+            margin-bottom: 20px; /* Add margin at the bottom of the card */
+        }
     }
 </style>
 @endpush
 
 @section('content')
-    <!-- Fullscreen Background Section with arrows -->
     <div class="background-image clearfix">
-        <button class="arrow arrow-left" id="prev-slide">&lt;</button> <!-- Left arrow -->
+        <button class="arrow arrow-left" id="prev-slide">&lt;</button>
         <div class="background-content">
             <h1 id="image-title"></h1>
             <p id="image-description"></p>
         </div>
-        <button class="arrow arrow-right" id="next-slide">&gt;</button> <!-- Right arrow -->
+        <button class="arrow arrow-right" id="next-slide">&gt;</button>
     </div>
 
-    <!-- Product Section (Now appears below the image) -->
-    <!-- <section class="product-section">
+    <section class="product-section">
         <div class="container">
             <div class="row">
-               
-                <div class="col-md-4">
-                    <div class="product-card">
-                        <img src="{{ asset('images/fertilizer/fertilizer2.jpg') }}" alt="Product 1">
-                        <h5>Fertilizer</h5>
-                        <p>Eco-friendly, organic fertilizers</p>
-                        <a href="#" class="btn btn-primary">More Details</a>
+                @foreach($productTypes as $index => $productType)
+                    @if($index % 3 == 0 && $index != 0)
+                        </div><div class="row">
+                    @endif
+                    <div class="col-md-4 col-sm-6"> <!-- Add col-sm-6 for better responsiveness -->
+                        <div class="product-card">
+                            <img src="{{ asset($productType->product_type_image) }}" alt="{{ $productType->product_type_name }}">
+                            <h5>{{ $productType->product_type_name }}</h5>
+                            <p>{{ $productType->product_type_description }}</p>
+                            <a href="{{ route('product.details', ['productTypeName' => $productType->product_type_name]) }}" class="btn btn-primary">More Details</a>
+                        </div>
                     </div>
-                </div>
-              
-                <div class="col-md-4">
-                    <div class="product-card">
-                        <img src="{{ asset('images/spices/spice3.jpeg') }}" alt="Product 2">
-                        <h5>Spices</h5>
-                        <p>Farm-fresh spices</p>
-                        <a href="#" class="btn btn-primary">More Details</a>
-                    </div>
-                </div>
-                
-                <div class="col-md-4">
-                    <div class="product-card">
-                        <img src="{{ asset('images/coconut/coconut7.jpg') }}" alt="Product 3">
-                        <h5>Coconut</h5>
-                        <p>For versatile uses in cooking and health</p>
-                        <a href="#" class="btn btn-primary">More Details</a>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
-    </section> -->
-
-<section class="product-section">
-    <div class="container">
-        <div class="row">
-            @foreach($productTypes as $index => $productType)
-                <!-- Open a new row after every 3 products -->
-                @if($index % 3 == 0 && $index != 0)
-                    </div><div class="row">
-                @endif
-                
-                <!-- Product Card -->
-                <div class="col-md-4">
-                    <div class="product-card">
-                        <!-- Use the product image and name dynamically -->
-                        <img src="{{ asset($productType->product_type_image) }}" alt="{{ $productType->product_type_name }}">
-                        <h5>{{ $productType->product_type_name }}</h5>
-                        <p>{{ $productType->product_type_description }}</p>
-                        <!-- <a href="/product-details" class="btn btn-primary">More Details</a> -->
-                        <a href="{{ route('product.details', ['productTypeName' => $productType->product_type_name]) }}" class="btn btn-primary">More Details</a>
-
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-
+    </section>
 @endsection
 
 @push('scripts')
 <script>
-    // JavaScript to handle automatic background image slider with content
     const slides = [
-        {
-            image: "{{ asset('images/home.jpg') }}",
-            title: "Welcome to Shihori International",
-            description: "Delivering the best products globally with care.",
-        },
-        {
-            image: "{{ asset('images/coconut/coconut2.jpg') }}",
-            title: "Premium Coconuts",
-            description: "We offer premium quality coconuts.",
-        },
-        {
-            image: "{{ asset('images/spices/spice1.jpg') }}",
-            title: "Explore Our Spices",
-            description: "Experience the rich flavor of our handpicked spices.",
-        },
-        {
-            image: "{{ asset('images/fertilizer/fertilizer1.jpg') }}",
-            title: "Eco-Friendly Fertilizer",
-            description: "Our organic fertilizer enriches your soil, promoting healthy plant growth.",
-        }
-    ]; // Array of images and content
+        { image: "{{ asset('images/home.jpg') }}", title: "Welcome to Shihori International", description: "Delivering the best products globally with care." },
+        { image: "{{ asset('images/coconut/coconut2.jpg') }}", title: "Premium Coconuts", description: "We offer premium quality coconuts." },
+        { image: "{{ asset('images/spices/spice1.jpg') }}", title: "Explore Our Spices", description: "Experience the rich flavor of our handpicked spices." },
+        { image: "{{ asset('images/fertilizer/fertilizer1.jpg') }}", title: "Eco-Friendly Fertilizer", description: "Our organic fertilizer enriches your soil, promoting healthy plant growth." }
+    ];
 
     let currentIndex = 0;
     const slider = document.querySelector('.background-image');
@@ -241,26 +195,12 @@
         description.textContent = currentSlide.description;
     }
 
-    // Function to go to the next slide
-    function nextSlide() {
-        currentIndex = (currentIndex + 1) % slides.length;
-        changeBackgroundImage();
-    }
+    function nextSlide() { currentIndex = (currentIndex + 1) % slides.length; changeBackgroundImage(); }
+    function prevSlide() { currentIndex = (currentIndex - 1 + slides.length) % slides.length; changeBackgroundImage(); }
 
-    // Function to go to the previous slide
-    function prevSlide() {
-        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-        changeBackgroundImage();
-    }
-
-    // Event listeners for next and previous buttons
     document.getElementById('next-slide').addEventListener('click', nextSlide);
     document.getElementById('prev-slide').addEventListener('click', prevSlide);
-
-    // Auto-slide every 5 seconds
     setInterval(nextSlide, 5000);
-
-    // Set the initial image and content
     changeBackgroundImage();
 </script>
 @endpush

@@ -2,17 +2,24 @@
 
 @push('styles')
     <style>
+        .product-table-container {
+            overflow-x: auto; /* Enable horizontal scrolling */
+            margin-top: 20px; /* Spacing above the table */
+        }
+
         .product-table {
-            width: 100%;
+            width: 100%; /* Full width of the container */
             border-collapse: collapse;
-            margin-top: 20px;
-            margin-bottom: 20px;
             border: 2px solid black;
         }
+
         .product-table th, .product-table td {
             padding: 15px;
             border-bottom: 1px solid #ddd;
+            text-align: center; /* Center align table content */
+            white-space: nowrap; /* Prevent text wrapping */
         }
+
         .product-table th {
             background-color: white;
             color: black;
@@ -20,30 +27,57 @@
             border-bottom: 2px solid black;
             font-size: 20px;
         }
+
         .product-table td {
             background-color: #fff;
             color: #333;
         }
+
         .product-table img {
-            max-width: 100px;
+            max-width: 100px; /* Ensure the image doesn't exceed this width */
+            height: auto; /* Maintain aspect ratio */
             border-radius: 5px;
         }
+
         .product-title {
             font-size: 18px;
             font-weight: bold;
             color: #00416A;
         }
+
         .product-type {
             font-size: 12px;
             color: #888;
         }
+
         i {
             font-size: 20px;
             color: black;
             cursor: pointer;
         }
+
         .info-icon:hover {
             color: black;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .product-table th, .product-table td {
+                padding: 10px; /* Adjust padding for smaller screens */
+                font-size: 14px; /* Smaller font size for better fit */
+            }
+
+            .product-title {
+                font-size: 16px; /* Adjust title size for smaller screens */
+            }
+
+            .product-type {
+                font-size: 10px; /* Adjust type size for smaller screens */
+            }
+
+            i {
+                font-size: 18px; /* Adjust icon size for smaller screens */
+            }
         }
     </style>
 @endpush
@@ -255,6 +289,7 @@
     </form>
 
     <h2 class="text-center">All Categories</h2>
+    <div class="product-table-container">
     <table class="product-table">
         <thead>
             <tr>
@@ -299,7 +334,7 @@
             @endforeach
         </tbody>
     </table>
-
+    </div>
      <!-- Modal structure for full-screen image display -->
      <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-fullscreen">

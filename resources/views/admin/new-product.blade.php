@@ -61,34 +61,34 @@
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.getElementById('product-form').addEventListener('submit', function(e) {
-            e.preventDefault(); // Prevent default submission
+            document.getElementById('product-form').addEventListener('submit', function(e) {
+                e.preventDefault(); // Prevent default submission
 
-            // Clear previous errors
-            document.querySelectorAll('.error').forEach(el => el.innerHTML = '');
+                // Clear previous errors
+                document.querySelectorAll('.error').forEach(el => el.innerHTML = '');
 
-            let hasError = false;
+                let hasError = false;
 
-            // Validation rules
-            const fields = [
-                { id: 'product-name', message: 'Product Name is required' },
-                { id: 'product-title', message: 'Title is required' },
-                { id: 'product-description', message: 'Description is required' },
-                { id: 'product-category', message: 'Category is required' },
-                { id: 'product-image', message: 'Image is required' }
-            ];
+                // Validation rules
+                const fields = [
+                    { id: 'product-name', message: 'Product Name is required' },
+                    { id: 'product-title', message: 'Title is required' },
+                    { id: 'product-description', message: 'Description is required' },
+                    { id: 'product-category', message: 'Category is required' },
+                    { id: 'product-image', message: 'Image is required' }
+                ];
 
-            // Check each field
-            fields.forEach(field => {
-                let input = document.getElementById(field.id);
-                if (input.value.trim() === '') {
-                    hasError = true;
-                    const errorElement = document.createElement('div');
-                    errorElement.classList.add('error');
-                    errorElement.innerHTML = field.message;
-                    input.parentNode.insertBefore(errorElement, input.nextSibling);
-                }
-            });
+                // Check each field
+                fields.forEach(field => {
+                    let input = document.getElementById(field.id);
+                    if (input.value.trim() === '') {
+                        hasError = true;
+                        const errorElement = document.createElement('div');
+                        errorElement.classList.add('error');
+                        errorElement.innerHTML = field.message;
+                        input.parentNode.insertBefore(errorElement, input.nextSibling);
+                    }
+                });
 
             // If no errors, proceed with form submission
             if (!hasError) {

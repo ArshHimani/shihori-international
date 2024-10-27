@@ -217,12 +217,12 @@ footer p {
                 <div class="team-member">
                     <!-- <img src="images/team1.jpg" alt="John Doe"> -->
                     <h3>Nitin Bhatvashiya</h3>
-                    <p>CEO & Founder</p>
+                    <p>Co-Founder / Managing Partner</p>
                 </div>
                 <div class="team-member">
                     <!-- <img src="images/team2.jpg" alt="Jane Smith"> -->
                     <h3>Yash Parmar</h3>
-                    <p>Head of Operations</p>
+                    <p>Co-Founder / Managing Partner</p>
                 </div>
                 <!-- <div class="team-member">
                     <img src="images/team3.jpg" alt="Mark Johnson">

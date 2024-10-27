@@ -22,6 +22,16 @@ class ProductController extends Controller
         return view('products',compact('productTypes'));
     }
 
+
+    // public function filterByCategory(Request $request){
+    //     $categoryId = $request->category_id;
+    //     // Fetch products based on category, or all if category ID is null
+    //     $products = $categoryId ? Product::where('product_type', $categoryId)->get() : Product::all();
+
+    //     return view('admin.partials.product-list', compact('products'))->render();
+    // }
+
+
     public function new_product(){
         $productTypes = ProductType::all();
         return view('admin.new-product',compact('productTypes'));
@@ -76,7 +86,20 @@ class ProductController extends Controller
     public function show()
     {
         $products = Product::all(); // Fetch all products
-        return view('admin.admin-index', compact('products'));
+        $productTypes = ProductType::all();
+        return view('admin.admin-index', compact('products','productTypes'));
+    }
+
+    public function filterProducts(Request $request){
+        $productType = $request->input('product_type');
+        $products = Product::query();
+
+        if ($productType) {
+            $products->where('product_type', $productType);
+        }
+
+        // Fetch products and return as JSON
+        return response()->json($products->get());
     }
 
     /**

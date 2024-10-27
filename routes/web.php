@@ -9,7 +9,7 @@ use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\AuthController;
-
+use App\Models\Product;
 
 // use App\Models\Certificate;
 // use App\Models\GalleryImage;
@@ -61,6 +61,7 @@ Route::group(['middleware' => ['checklogin', 'clearcache']], function () {
     Route::post('/new-product', [ProductController::class, 'store'])->name('product.store');
 
     Route::get('/admin-index', [ProductController::class, 'show'])->name('admin.index');
+    Route::get('/products/filter', [ProductController::class, 'filterProducts'])->name('admin.products.filter');
 
     Route::get('/update-product/{productId}',[ProductController::class,'product_update_show'])->name('product.show');
 
@@ -91,9 +92,14 @@ Route::group(['middleware' => ['checklogin', 'clearcache']], function () {
     Route::put('/contactUs-update',[ContactUsController::class,'contactUs_update'])->name('contactUs.update');
 
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+
+        
+    Route::get('/change-password',[AuthController::class,'show_change_password'])->name('show.change.password');
+    Route::put('/change-password',[AuthController::class,'change_password'])->name('change.password');
 });
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login/check', [AuthController::class, 'checkLogin'])->name('login.check');
+
 
 
